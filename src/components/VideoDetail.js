@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import ReactPlayer from "react-player";
 import { Typography, Box, Stack } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
-import Video from "./";
+import {Videos} from "./";
 import { fetchFromAPI } from "../utils/fetchFromAPI";
 
 const VideoDetail = () => {
@@ -15,7 +15,9 @@ const VideoDetail = () => {
       setVideoDetail(data.items[0])
     );
 
-    fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`).then((data)=> setRelatedVideos(data.items))
+    fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`).then(
+      (data) => setRelatedVideos(data.items)
+    );
   }, [id]);
 
   if (!videoDetail?.snippet) return "Loading...";
@@ -41,27 +43,43 @@ const VideoDetail = () => {
               px={2}
             >
               <Link to={`/channel/${videoDetail?.snippet?.channelId}`}>
-                <Typography variant={{ sm: "subtitle1", md: "h6" }} color="#fff">
+                <Typography
+                  variant={{ sm: "subtitle1", md: "h6" }}
+                  color="#fff"
+                >
                   {videoDetail?.snippet?.channelTitle}
-                  <CheckCircle sx={{fontSize:'12px', color: 'gray', ml:'5px'}}/>
+                  <CheckCircle
+                    sx={{ fontSize: "12px", color: "gray", ml: "5px" }}
+                  />
                 </Typography>
               </Link>
               <Stack direction="row" gap="20px" alignItems="center">
-                <Typography variant="body1" sx={{opacity: 0.7}}>
-                  {parseInt(videoDetail?.statistics?.viewCount).toLocaleString()} Views
+                <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                  {parseInt(
+                    videoDetail?.statistics?.viewCount
+                  ).toLocaleString()}{" "}
+                  Views
                 </Typography>
-                <Typography variant="body1" sx={{opacity: 0.7}}>
-                  {parseInt(videoDetail?.statistics?.likeCount).toLocaleString()} Likes
+                <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                  {parseInt(
+                    videoDetail?.statistics?.likeCount
+                  ).toLocaleString()}{" "}
+                  Likes
                 </Typography>
               </Stack>
             </Stack>
           </Box>
         </Box>
-      </Stack>
 
-      <Box>
-        
-      </Box>
+        <Box
+          px={2}
+          py={{ md: 1, xs: 5 }}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Videos videos={relatedVideos} direction="column" />
+        </Box>
+      </Stack>
     </Box>
   );
 };
